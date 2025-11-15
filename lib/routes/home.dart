@@ -13,21 +13,20 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
-  static final GlobalKey _scaffoldKey = GlobalKey();
-
   final _redColor = Color(0xffbd081c);
   final _darkGrey = Color(0xff747474);
+  final _images = List.generate(31, (index) => 'assets/images/image_$index.jpg')
+    ..shuffle();
 
   late final FocusNode _focusNode;
   late final TabController _tabController;
   late final ScrollController _hideButtonController;
-  late final AnimationController _animationController;
-  late final Animation _animation;
-  late final List<Widget> _widgetOptions;
+  late final GlobalKey _scaffoldKey;
 
   var _selectedIndex = 0;
   var _searchKey = '';
   var _isVisible = true;
+
   late Offset _position;
 
   @override
@@ -40,37 +39,7 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
       ..addListener(_onHideButtonControllerChanged);
 
     _tabController = TabController(length: 3, vsync: this);
-
-    _animationController = AnimationController(
-      vsync: this,
-      duration: Duration(milliseconds: 250),
-    );
-    _animation = Tween<double>(begin: 0, end: 1).animate(_animationController);
-
-    _widgetOptions = [
-      ImagesList(
-        controller: _hideButtonController,
-        onLongPressStart: (offset) {
-          setState(() => _position = offset);
-
-          showMenu(
-            context: context,
-            position: RelativeRect.fromLTRB(
-              _position.dx,
-              _position.dy,
-              _position.dx,
-              _position.dy,
-            ),
-            items: PopupMenu.choices
-                .map((choice) => PopupMenuItem<Widget>(child: choice))
-                .toList(),
-          );
-        },
-      ),
-      Text("Index 3: Followers"),
-      Text('Index 2: Notifications'),
-      Text('Index 3: Saved'),
-    ];
+    _scaffoldKey = GlobalKey<ScaffoldState>();
   }
 
   @override
@@ -185,7 +154,28 @@ class _HomeScreenState extends State<HomeScreen> with TickerProviderStateMixin {
             FadeTransition(opacity: animation, child: child),
         child: _focusNode.hasFocus
             ? Search(controller: _tabController)
-            : Feed(child: _widgetOptions.elementAt(_selectedIndex)),
+            : Feed(
+                child: ImagesList(
+                  controller: _hideButtonController,
+                  images: _images,
+                  onLongPressStart: (offset) {
+                    setState(() => _position = offset);
+
+                    showMenu(
+                      context: context,
+                      position: RelativeRect.fromLTRB(
+                        _position.dx,
+                        _position.dy,
+                        _position.dx,
+                        _position.dy,
+                      ),
+                      items: PopupMenu.choices
+                          .map((choice) => PopupMenuItem<Widget>(child: choice))
+                          .toList(),
+                    );
+                  },
+                ),
+              ),
       ),
       bottomNavigationBar: AnimatedContainer(
         duration: Duration(milliseconds: 250),
@@ -360,14 +350,13 @@ class CustomTabBar extends TabBar {
 class ImagesList extends StatelessWidget {
   final ScrollController controller;
   final void Function(Offset offset) onLongPressStart;
+  final List<String> images;
 
-  final _images = List.generate(31, (index) => 'assets/images/image_$index.jpg')
-    ..shuffle();
-
-  ImagesList({
+  const ImagesList({
     super.key,
     required this.controller,
     required this.onLongPressStart,
+    required this.images,
   });
 
   @override
@@ -377,7 +366,7 @@ class ImagesList extends StatelessWidget {
       crossAxisCount: 4,
       mainAxisSpacing: 10,
       crossAxisSpacing: 8,
-      itemCount: _images.length,
+      itemCount: images.length,
       itemBuilder: (_, index) => Column(
         children: [
           Material(
@@ -404,7 +393,7 @@ class ImagesList extends StatelessWidget {
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadiusGeometry.circular(6),
                       ),
-                      child: Image.asset(_images[index]),
+                      child: Image.asset(images[index]),
                     ),
                     Padding(
                       padding: EdgeInsets.only(right: 6),
@@ -417,9 +406,7 @@ class ImagesList extends StatelessWidget {
                         child: InkWell(
                           highlightColor: Colors.transparent,
                           splashColor: Colors.transparent,
-                          onTap: () => _imageModalBottomSheet(
-                            _HomeScreenState._scaffoldKey.currentContext!,
-                          ),
+                          onTap: () => _imageModalBottomSheet(context),
                           child: IconTheme(
                             data: IconThemeData(size: 18),
                             child: Icon(Icons.more_horiz),
