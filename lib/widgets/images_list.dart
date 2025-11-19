@@ -1,6 +1,6 @@
+import 'package:fl_scroll_view/fl_scroll_view.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 
 class ImagesList extends StatelessWidget {
   final ScrollController controller;
@@ -16,66 +16,70 @@ class ImagesList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MasonryGridView.count(
+    return FlScrollListGrid.count(
       controller: controller,
       crossAxisCount: 4,
       mainAxisSpacing: 10,
       crossAxisSpacing: 8,
-      itemCount: images.length,
-      itemBuilder: (_, index) => Column(
-        children: [
-          Material(
-            child: InkWell(
-              borderRadius: BorderRadius.circular(10),
-              splashColor: Colors.transparent,
-              onTap: () {
-                if (kDebugMode) print("Tapped");
-              },
-              child: GestureDetector(
-                onLongPressStart: (details) {
-                  final box = context.findRenderObject() as RenderBox;
-                  final local = box.globalToLocal(details.globalPosition);
+      gridStyle: GridStyle.masonry,
+      children: images
+          .map(
+            (image) => Column(
+              children: [
+                Material(
+                  child: InkWell(
+                    borderRadius: BorderRadius.circular(10),
+                    splashColor: Colors.transparent,
+                    onTap: () {
+                      if (kDebugMode) print("Tapped");
+                    },
+                    child: GestureDetector(
+                      onLongPressStart: (details) {
+                        final box = context.findRenderObject() as RenderBox;
+                        final local = box.globalToLocal(details.globalPosition);
 
-                  onLongPressStart(local);
-                },
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Card(
-                      elevation: 0,
-                      semanticContainer: true,
-                      clipBehavior: Clip.antiAliasWithSaveLayer,
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadiusGeometry.circular(6),
-                      ),
-                      child: Image.asset(images[index]),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(right: 6),
-                      child: Container(
-                        width: 24,
-                        height: 24,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: InkWell(
-                          highlightColor: Colors.transparent,
-                          splashColor: Colors.transparent,
-                          onTap: () => _imageModalBottomSheet(context),
-                          child: IconTheme(
-                            data: IconThemeData(size: 18),
-                            child: Icon(Icons.more_horiz),
+                        onLongPressStart(local);
+                      },
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Card(
+                            elevation: 0,
+                            semanticContainer: true,
+                            clipBehavior: Clip.antiAliasWithSaveLayer,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadiusGeometry.circular(6),
+                            ),
+                            child: Image.asset(image),
                           ),
-                        ),
+                          Padding(
+                            padding: EdgeInsets.only(right: 6),
+                            child: Container(
+                              width: 24,
+                              height: 24,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: InkWell(
+                                highlightColor: Colors.transparent,
+                                splashColor: Colors.transparent,
+                                onTap: () => _imageModalBottomSheet(context),
+                                child: IconTheme(
+                                  data: IconThemeData(size: 18),
+                                  child: Icon(Icons.more_horiz),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
-                  ],
+                  ),
                 ),
-              ),
+              ],
             ),
-          ),
-        ],
-      ),
+          )
+          .toList(),
     );
   }
 

@@ -17,6 +17,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.19.1"
+  easy_refresh:
+    dependency: transitive
+    description:
+      name: easy_refresh
+      sha256: "486e30abfcaae66c0f2c2798a10de2298eb9dc5e0bb7e1dba9328308968cae0c"
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.4.0"
+  fl_scroll_view:
+    dependency: "direct main"
+    description:
+      name: fl_scroll_view
+      sha256: d110a604df22a63320c16c22b1384ee7322339c2f825c1d3eb773eeacfdc6ab1
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.1"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -31,7 +47,7 @@ packages:
     source: hosted
     version: "6.0.0"
   flutter_staggered_grid_view:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: flutter_staggered_grid_view
       sha256: "19e7abb550c96fbfeb546b23f3ff356ee7c59a019a651f8f102a4ba9b7349395"
@@ -62,6 +78,22 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.17.0"
+  path_drawing:
+    dependency: transitive
+    description:
+      name: path_drawing
+      sha256: bbb1934c0cbb03091af082a6389ca2080345291ef07a5fa6d6e078ba8682f977
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.1"
+  path_parsing:
+    dependency: transitive
+    description:
+      name: path_parsing
+      sha256: "883402936929eac138ee0a45da5b0f2c80f89913e6dc3bf77eb65b84b409c6ca"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.0"
   sky_engine:
     dependency: transitive
     description: flutter
@@ -77,4 +109,4 @@ packages:
     version: "2.2.0"
 sdks:
   dart: ">=3.10.0 <4.0.0"
-  flutter: ">=3.7.0"
+  flutter: ">=3.24.0"
